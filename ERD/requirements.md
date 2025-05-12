@@ -60,46 +60,87 @@ recipient_id: Foreign Key, references User(user_id)
 message_body: TEXT, NOT NULL
 sent_at: TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
 
-## Relationships
+---
 
-i. User to Booking,Payment,Review, Message
-ii. Property to Booking, Payment
-iii. Booking to Payment, Property
-iv. Message to User
+## 🔗 Relationships Between Entities
 
-## Constraints
+---
 
-### User Table
+### 1. **User to Booking**
 
-Unique constraint on email.
-Non-null constraints on required fields.
+**Relationship:** One-to-Many
 
-### Property Table
+- A **User** (as a guest) can make many **Bookings**.
+- A **Booking** is made by one **User**.
 
-Foreign key constraint on host_id.
-Non-null constraints on essential attributes.
+> `User.user_id` → `Booking.user_id`
 
-### Booking Table
+---
 
-Foreign key constraints on property_id and user_id.
-status must be one of pending, confirmed, or canceled.
+### 2. **User to Property**
 
-### Payment Table
+**Relationship:** One-to-Many
 
-Foreign key constraint on booking_id,
-ensuring payment is linked to valid bookings.
+- A **User** (as a host) can create and manage many **Properties**.
+- Each **Property** belongs to one **User** (host).
 
-### Review Table
+> `User.user_id` → `Property.host_id`
 
-Constraints on rating values (1-5).
-Foreign key constraints on property_id and user_id.
+---
 
-### Message Table
+### 3. **Property to Booking**
 
-Foreign key constraints on sender_id and recipient_id.
-Indexing
-Primary Keys: Indexed automatically.
-_Additional Indexes:_
-email in the User table.
-property_id in the Property and Booking tables.
-booking_id in the Booking and Payment tables.
+**Relationship:** One-to-Many
+
+- A **Property** can have many **Bookings**.
+- Each **Booking** is for one **Property**.
+
+> `Property.property_id` → `Booking.property_id`
+
+---
+
+### 4. **Booking to Payment**
+
+**Relationship:** One-to-One or One-to-Many (depending on your model)
+
+- Each **Booking** can have **one or more Payments**, depending on whether split or installment payments are supported.
+- Each **Payment** is tied to a single **Booking**.
+
+> `Booking.booking_id` → `Payment.booking_id`
+
+---
+
+### 5. **Property to Review**
+
+**Relationship:** One-to-Many
+
+- A **Property** can have many **Reviews**.
+- Each **Review** is tied to one **Property**.
+
+> `Property.property_id` → `Review.property_id`
+
+---
+
+### 6. **User to Review**
+
+**Relationship:** One-to-Many
+
+- A **User** (as a guest) can write many **Reviews**.
+- Each **Review** is written by one **User**.
+
+> `User.user_id` → `Review.user_id`
+
+---
+
+### 7. **User to Message (Self-referencing)**
+
+**Relationship:** Many-to-Many (Modeled as Two One-to-Many relationships)
+
+- A **User** can send many **Messages** and receive many **Messages**.
+- Messages have both a `sender_id` and a `recipient_id`, each referencing `User.user_id`.
+
+> `User.user_id` → `Message.sender_id` > `User.user_id` → `Message.recipient_id`
+
+---
+
+### Optional: ERD Diagram
