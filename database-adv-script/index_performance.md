@@ -37,7 +37,7 @@ WHERE user_id = '123';
 
 Take note of the execution time and whether it's doing a sequential scan.
 
-After Creating Index
+## After Creating Index
 
 -- Run this after you've created the indexes
 EXPLAIN ANALYZE
