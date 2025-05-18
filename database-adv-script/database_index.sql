@@ -9,3 +9,16 @@ CREATE INDEX idx_bookings_date ON bookings(date);
 -- Indexes for Properties table
 CREATE INDEX idx_properties_property_id ON properties(property_id);
 CREATE INDEX idx_properties_name ON properties(name);
+
+
+-- run this Before creating the  Index
+EXPLAIN ANALYZE
+SELECT *
+FROM bookings
+WHERE user_id = '123';
+
+-- Run this after you've created the indexes
+EXPLAIN ANALYZE
+SELECT *
+FROM bookings
+WHERE user_id = '123';
