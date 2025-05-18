@@ -19,16 +19,20 @@ JOIN payments pay ON b.payment_id = pay.payment_id;
 
  -- analyze query performance 
 
-EXPLAIN ANALYZE
+-- Initial complex query with filtering
 SELECT 
     b.booking_id,
     b.date,
-    u.user_id,
-    u.name,
-    p.name,
-    pay.amount
+    u.name AS user_name,
+    u.email,
+    p.name AS property_name,
+    p.location,
+    pay.amount,
+    pay.status
 FROM bookings b
 JOIN users u ON b.user_id = u.user_id
 JOIN properties p ON b.property_id = p.property_id
-JOIN payments pay ON b.payment_id = pay.payment_id;
-
+JOIN payments pay ON b.payment_id = pay.payment_id
+WHERE pay.status = 'completed'
+  AND p.location = 'Lagos'
+  AND b.date >= '2024-01-01';
